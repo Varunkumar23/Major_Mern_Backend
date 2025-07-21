@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "echo 'no build needed'",
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],

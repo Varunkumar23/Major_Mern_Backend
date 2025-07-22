@@ -34,7 +34,7 @@ const productSchema = new Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: ["electronics", "clothing", "books", "furniture", "other"],
+      enum: ["electronics", "clothing", "books", "furniture","footwear", "other"],
       lowercase: true,
     },
     brand: {
@@ -42,7 +42,7 @@ const productSchema = new Schema(
       trim: true,
       default: "Generic",
     },
-    images: [String],
+    images: String,
     discount: {
       type: Number,
       min: 0,

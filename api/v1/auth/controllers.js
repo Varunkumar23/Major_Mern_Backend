@@ -2,11 +2,11 @@ const bcrypt = require("bcrypt");
 const { userModel } = require("../../../models/userSchema");
 const jwt = require("jsonwebtoken");
 const { handleGenericApiError } = require("../../../utils/controllerHelpers");
-const{attachJWTToken,removeJWTToken}=require("../../../utils/jwtHelpers")
+const { attachJWTToken, removeJWTToken } = require("../../../utils/jwtHelpers");
 
 const userRegistrationController = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
@@ -17,7 +17,7 @@ const userRegistrationController = async (req, res) => {
       });
     }
 
-    const newUser = await userModel.create({ email, password });
+    const newUser = await userModel.create({ email, password, role });
     const { password: _, ...safeData } = newUser._doc;
 
     res.status(201).json({
@@ -51,11 +51,11 @@ const userLoginController = async (req, res) => {
         data: {},
       });
     }
-    attachJWTToken(res, { email: user.email, _id: user._id,user:user.role });
+    attachJWTToken(res, { email: user.email, _id: user._id, user: user.role });
     return res.status(200).json({
       isSuccess: true,
       message: "Login Successfull!",
-      data: { user: { email: user.email, _id: user._id } },
+      data: { user: { email: user.email, _id: user._id, role: user.role } },
     });
   } catch (err) {
     handleGenericApiError(userLoginController, req, res, err);
@@ -68,7 +68,7 @@ const userLogoutController = async (req, res) => {
 };
 
 const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
+  if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({
       isSuccess: false,
       message: "Access Denied",
@@ -77,7 +77,6 @@ const adminMiddleware = (req, res, next) => {
   }
   next();
 };
-
 
 module.exports = {
   adminMiddleware,

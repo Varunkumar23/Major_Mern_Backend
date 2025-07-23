@@ -8,17 +8,16 @@ const attachJWTToken = (res, data) => {
       role: data.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" } // Also add expiration to JWT itself
+    { expiresIn: "2m" } // Also add expiration to JWT itself
   );
 
   res.cookie("authorization", token, {
-    maxAge: 1 * 60 * 60 * 1000, // 1 hour
+    maxAge: 2 * 60 * 1000,
     secure: process.env.NODE_ENV === "production", // only HTTPS in prod
     sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
     httpOnly: true,
   });
 };
-
 
 const removeJWTToken = (res) => {
   res.clearCookie("authorization", {

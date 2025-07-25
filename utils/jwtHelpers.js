@@ -13,7 +13,7 @@ const attachJWTToken = (res, data) => {
 
   res.cookie("authorization", token, {
     maxAge: 2 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production", // only HTTPS in prod
+    secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
     httpOnly: true,
   });
